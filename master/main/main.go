@@ -7,18 +7,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"runtime"
 )
+
 var confFile string
 
-func initArgs()  {
-	flag.StringVar(&confFile,"config","./master.json","配置文件")
+func initArgs() {
+	flag.StringVar(&confFile, "config", "./master.json", "配置文件")
 	flag.Parse()
 }
 
-func initEnv()  {
+func initEnv() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
-func main(){
+func main() {
 	initEnv()
 	initArgs()
 	err := master.InitConfig(confFile)
@@ -30,6 +31,9 @@ func main(){
 		return
 	}
 	r := gin.Default()
-	r.POST("save/jobs", master.HandleJobSave)
-	r.Run(fmt.Sprintf(":%d",master.G_config.ApiPort))
+	r.POST("job/save/", master.HandleJobSave)
+	r.GET("job/delete/:jobname", master.HandleJobDelete)
+	r.GET("job/list", master.HandleJobList)
+	r.GET("job/kill/:name", master.HandleJobKill)
+	r.Run(fmt.Sprintf(":%d", master.G_config.ApiPort))
 }
