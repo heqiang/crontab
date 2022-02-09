@@ -14,7 +14,7 @@ func HandleJobSave(c *gin.Context) {
 	//任务保存到etcd
 	job := c.PostForm("job")
 	var resJob common.Job
-
+	fmt.Println(job)
 	err := json.Unmarshal([]byte(job), &resJob)
 	if err != nil {
 		fmt.Println("序列化错误")
